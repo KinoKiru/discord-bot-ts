@@ -27,5 +27,10 @@
   },
   "dependencies": {
     "nhentai.js-api": "^2.1.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KinoKiru/dev_bot.git"
+  },
+  "homepage": "https://github.com/KinoKiru/dev_bot"
 }
