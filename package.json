@@ -1,0 +1,31 @@
+{
+  "name": "dev_botjes",
+  "version": "1.0.0",
+  "description": "UwU So muchh fukcyw",
+  "main": "lib/seks.js",
+  "types": "lib/seks.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "start": "tsc && node lib/seks.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "seks bot",
+    "roblox",
+    "fortnite",
+    "peppa pig",
+    "nickelodeon",
+    "disney",
+    "paublo escobar"
+  ],
+  "author": "kino",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.3.4"
+  },
+  "dependencies": {
+    "nhentai.js-api": "^2.1.7"
+  }
+}
