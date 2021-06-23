@@ -23,10 +23,15 @@
   "author": "kino",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^15.12.4",
+    "@types/node-fetch": "^2.5.10",
     "typescript": "^4.3.4"
   },
   "dependencies": {
-    "nhentai.js-api": "^2.1.7"
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0",
+    "nhentai.js-api": "^2.1.7",
+    "node-fetch": "^2.6.1"
   },
   "repository": {
     "type": "git",
