@@ -36,9 +36,9 @@ class Queue extends Command{
         }
     }
     secondsToTime(seconds: number) {
-        const hours = Math.floor(seconds / 3600).toString();
-        const minutes = Math.floor(seconds / 60 % 60).toString();
-        const seconds2 = (seconds % 60 - 1).toString();
+        const hours = Math.floor(seconds / 3600).toFixed(0);
+        const minutes = Math.floor(seconds / 60 % 60).toFixed(0);
+        const seconds2 = (seconds % 60 - 1).toFixed(0);
         return (hours === '0' ? '' : hours.padStart(2, '0') + ':') + minutes.padStart(2, '0') + ':' + seconds2.padStart(2, '0');
     }
 }

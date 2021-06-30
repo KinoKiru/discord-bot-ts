@@ -2,7 +2,12 @@ import {Spotify} from 'simple-spotify';
 import {CommandData} from "../model/command";
 import ytsr, {Video} from "ytsr";
 import AppendError from "./appendError";
+import play from "../command/music/play";
 
+export enum SongType {
+    YOUTUBE,
+    SPOTIFY
+}
 
 export interface Song {
     title: string,
@@ -10,7 +15,9 @@ export interface Song {
     isLive: boolean,
     duration: string,
     durationSeconds: number,
-    thumbnail: string
+    thumbnail: string,
+    type: SongType,
+    artist?: string
 }
 
 // Create an instance of the Spotify class
@@ -27,10 +34,19 @@ class sfdl {
 
             for (const song of songs) {
                 try {
-                    const track = await this.searchYT(song.name + ' ' + song.artists[0].name);
-                    if (track) {
-                        songArr.push(track);
-                    }
+                    // const track = await this.searchYT(song.name + ' ' + song.artists[0].name);
+
+                    songArr.push({
+                        title: song.name,
+                        url: song.preview_url || '',
+                        duration: this.secondsToTime(song.duration_ms),
+                        isLive: false,
+                        durationSeconds: (song.duration_ms / 1000),
+                        thumbnail: song.album?.images[0]!.url || "",
+                        type: SongType.SPOTIFY,
+                        artist: song.artists[0].name
+                    });
+
                 } catch (e) {
                     await data.msg.channel.send("Couldn't find youtube equivalent of " + song.name);
                     AppendError.onError(e + " " + "sfdl.ts");
@@ -53,11 +69,22 @@ class sfdl {
             const songs: Song[] = [];
             for (const item of playlist.tracks.items) {
                 if (item.track) {
+                    const track = item.track
                     try {
-                        let track = await this.searchYT(item.track.name + ' ' + item.track.artists[0].name);
-                        if (track) {
-                            songs.push(track);
-                        }
+
+                        songs.push(
+                            {
+                                title: track.name,
+                                url: track.preview_url || '',
+                                duration: this.secondsToTime(track.duration_ms),
+                                isLive: false,
+                                durationSeconds: (track.duration_ms / 1000),
+                                thumbnail: track.album?.images[0]!.url || "",
+                                type: SongType.SPOTIFY,
+                                artist: track.artists[0].name
+                            }
+                        );
+
                     } catch (e) {
                         await data.msg.channel.send("Couldn't find youtube equivalent of " + item.track.name);
                         AppendError.onError(e + " " + "sfdl.ts");
@@ -78,7 +105,7 @@ class sfdl {
             //hij pakt 20 songs en kijkt welke tussen de timespan past en pakt dan de relavante
             const [result]: any[] = (await ytsr(filter1!.url, {limit: 20})).items.filter((track: any) => {
                 //true meenemen false niet meenemen
-                let songToSeconds = this.timeToSeconds(track.duration);
+                let songToSeconds = play.timeToSeconds(track.duration);
                 let trackTime = songToSeconds;
                 // return of true als het binnen 2 minuten range is anders false en wordt hij niet meegenomen
                 return trackTime < (songToSeconds + 120) && trackTime > (songToSeconds - 120);
@@ -90,32 +117,21 @@ class sfdl {
                     url: result.url,
                     isLive: result.isLive,
                     duration: result.duration || '',
-                    durationSeconds: this.timeToSeconds(result.duration),
-                    thumbnail: result.bestThumbnail.url
+                    durationSeconds: play.timeToSeconds(result.duration),
+                    thumbnail: result.bestThumbnail.url,
+                    type: SongType.YOUTUBE
                 };
             }
         }
+
     }
 
-    static timeToSeconds(time: any) {
-        if (!time || time === '') return 0;
-        const split = time.split(':');
-        let hours = 0;
-        let minutes: number;
-        let seconds: number;
-        if (split.length === 3) {
-            const [h, m, s] = split;
-            hours = +h;
-            minutes = +m;
-            seconds = +s;
-        } else {
-            const [m, s] = split;
-            minutes = +m;
-            seconds = +s;
-        }
-        return (hours * 3600) + (minutes * 60) + seconds;
+    static secondsToTime(seconds: number) {
+        const hours = Math.floor(seconds / 3600).toString();
+        const minutes = Math.floor(seconds / 60 % 60).toString();
+        const seconds2 = Math.max(0, seconds % 60 - 1).toString();
+        return (hours === '0' ? '' : hours.padStart(2, '0') + ':') + minutes.padStart(2, '0') + ':' + seconds2.padStart(2, '0');
     }
-
 
 }
 

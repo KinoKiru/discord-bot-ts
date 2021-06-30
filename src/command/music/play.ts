@@ -1,6 +1,6 @@
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
-import sfdl from "../../util/sfdl";
+import sfdl, {Song, SongType} from "../../util/sfdl";
 import {queue} from "../../seks";
 import ytdl from "ytdl-core";
 import ytpl from "ytpl";
@@ -21,7 +21,7 @@ class play extends Command {
             serverQueue = {
                 textChannel: data.msg.channel,
                 connection: null,
-                songs: [],
+                songs: [] as Song[],
                 volume: 1,
                 playing: true
             };
@@ -67,13 +67,15 @@ class play extends Command {
                     return;
                 }
                 //hier maak ik een object genaamd songs en daar geef ik een title,url,duration,tumbnail uit songInfo
-                const songs = {
+                const songs : Song = {
                     title: songInfo.videoDetails.title,
                     url: songInfo.videoDetails.video_url,
-                    durationSeconds: (songInfo.videoDetails.lengthSeconds),
-                    thumbnail: songInfo.videoDetails.thumbnails[0].url
+                    durationSeconds: play.timeToSeconds(songInfo.videoDetails.lengthSeconds),
+                    thumbnail: songInfo.videoDetails.thumbnails[0].url,
+                    isLive : songInfo.videoDetails.isLiveContent,
+                    type : SongType.YOUTUBE,
+                    duration : songInfo.videoDetails.lengthSeconds
                 }
-                console.log('liedje', songs)
                 //hier push ik songs naar de songs array van serverQueue, dus als serverQueue.songs leeg is speelt hij deze als eerste af
                 serverQueue.songs.push(songs);
 
@@ -87,16 +89,18 @@ class play extends Command {
 
                 //hier gooi ik in songs de songInfo.items(aka de songs).map en dan wil ik alleen de:
                 //Title, url, duration, en de thumbnail
-                const songs = songInfo.items.map(({title, url, duration, bestThumbnail}) => {
+                const songs = songInfo.items.map(({title, url, duration, bestThumbnail, isLive}) : Song => {
                     return {
                         title,
                         url,
-                        durationSeconds: this.timeToSeconds(duration),
-                        thumbnail: bestThumbnail.url
+                        durationSeconds: play.timeToSeconds(duration),
+                        thumbnail: bestThumbnail.url || "",
+                        isLive : isLive,
+                        duration : duration || "0",
+                        type : SongType.YOUTUBE
                     };
                 });
                 //hier push ik naar serverQueue.songs alles in songs
-                console.log(songs)
                 serverQueue.songs.push(...songs);
 
                 //pas als de message is gestuurd gaat hij pas door naar de volgende stap
@@ -136,11 +140,14 @@ class play extends Command {
                 //en hier gooi ik de url erin met de optie dat het er maar 1 mag zijn
                 const searchResults: { items: Video[] } = await ytsr(filter1!.url!, options) as any;
                 //hier gooi ik de info in de delen
-                const songs = {
+                const songs : Song = {
                     title: searchResults.items[0].title,
                     url: searchResults.items[0].url,
-                    durationSeconds: this.timeToSeconds(searchResults.items[0].duration),
-                    thumbnail: searchResults.items[0].bestThumbnail.url
+                    durationSeconds: play.timeToSeconds(searchResults.items[0].duration),
+                    thumbnail: searchResults.items[0].bestThumbnail.url || "",
+                    type: SongType.YOUTUBE,
+                    isLive: searchResults.items[0].isLive,
+                    duration: searchResults.items[0].duration || "0"
                 };
                 //hier push ik de song naar de songs array
                 serverQueue.songs.push(songs);
@@ -156,13 +163,14 @@ class play extends Command {
     }
 
 
-    async play(serverQueue: any, queue: any, start = false, data: CommandData) {
-        const song = serverQueue.songs[0];
-        console.log(song)
+     async play(serverQueue: any, queue: any, start = false, data: CommandData) {
+
+        const song = serverQueue.songs[0] as Song;
 
         //als het eerste liedje in de serverqueue undifined is dan cleart hij de queue en dan leaved ie
         if (song === undefined) {
         }
+
         if (serverQueue.songs.length === 0) {
             queue.delete(data.msg.guild!.id);
             serverQueue.connection.disconnect();
@@ -171,6 +179,16 @@ class play extends Command {
         }
 
         if (serverQueue.songs.length <= 1 || start) {
+            if (song.type === SongType.SPOTIFY){
+                console.log(song)
+                let track = await sfdl.searchYT(song.title + ' ' + song.artist);
+                if(track){
+                    song.url = track.url;
+                }else{
+                    await data.msg.channel.send(song.title + " isn't found");
+                    return;
+                }
+            }
             //als de server.songs.length <= 1 dan speelt hij het liedje af ipv de plaatsen in de queue
             const dispatcher = serverQueue.connection
                 .play(ytdl(song.url, {filter: "audioonly", quality: "highestaudio"}))
@@ -179,9 +197,8 @@ class play extends Command {
                     this.play(serverQueue, queue, true, data);
                 })
                 .on('error', (err: any) => {
-                     AppendError.onError(err.message + " On line: 35, in file: play.js");
+                    AppendError.onError(err.message + " On line: 35, in file: play.js");
                     data.msg.channel.send("song not found");
-
                     data.bot.commands.get("skip")!.execute(data)
                 });
             //als hij t goed doet dan deelt hij de liedjes sound gedeeld door 5? en dan geeft hij een message met de song title
@@ -195,7 +212,7 @@ class play extends Command {
         }
     }
 
-    timeToSeconds(time: string | null) {
+    static timeToSeconds(time: string | null) {
         if (!time || time === '') return 0;
         const split = time.split(':');
         let hours = 0;

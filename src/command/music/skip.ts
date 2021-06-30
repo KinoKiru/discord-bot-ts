@@ -3,6 +3,7 @@ import AppendError from "../../util/appendError";
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
 import {queue} from "../../seks";
+import play from "./play";
 
 class skip extends Command{
 
@@ -23,10 +24,8 @@ class skip extends Command{
                 return;
             }
 
-            console.log(serverQueue);
             //als er nog geen serverqueue bestaat of dat er geen liedjes zijn dan leaved ie en geeft hij een message aan de user
             if (!serverQueue || serverQueue.songs.length === 0) {
-                console.log(serverQueue)
                 data.msg.member.voice.channel.leave();
                 await data.msg.channel.send("There is no song that I could skip!");
                 return ;
@@ -36,36 +35,13 @@ class skip extends Command{
             if (serverQueue.songs.length >= 1) {
                 await data.msg.channel.send(`Skipped **${serverQueue.songs[0].title}**`);
                 serverQueue.songs.shift();
-                await this.nextSong(serverQueue);
+                await (data.bot.commands.get("play")! as play)!.play(serverQueue, queue, true, data);
             }
         } catch (e) {
             AppendError.onError(e + " in skip on line 32");
         }
     }
 
-
-     async nextSong(queue: any) {
-
-        //als er meer dan 0 nummers in zitten dan
-        if (queue.songs.length !== 0) {
-            //hij played de nummer die erna kwam
-            let dispatcher = queue.connection.play(ytdl(queue.songs[0].url, {
-                filter: "audioonly",
-                quality: "highestaudio"
-            }));
-
-            queue.songs[0].dispatcher = dispatcher;
-            queue.songs[0].pauseTime = 0;
-            dispatcher.on('finish', () => {
-                queue.songs.shift();
-                this.nextSong(queue);
-            });
-            queue.connection.dispatcher.setVolume(queue.volume);
-            dispatcher.on('error', console.log);
-        } else {
-            queue.connection.disconnect();
-        }
-    }
 }
 
 export default skip
