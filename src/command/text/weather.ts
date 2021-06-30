@@ -16,21 +16,21 @@ class Weather extends Command {
             return;
         }
 
-        let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${data.args[0]}&appid=3c89457400ca1442431a880da3a21c6b&units=metric`);
+        let response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${data.args[0]}&appid=${process.env.weatherID}&units=metric`);
         let result = await response.json();
 
         let sunrise = new Date(result.sys.sunrise * 1000).toTimeString().split(" ")[0];
         let sunset = new Date(result.sys.sunset * 1000).toTimeString().split(" ")[0];
 
-      sunrise = sunrise.slice(0, sunrise.lastIndexOf(":"));
-       sunset = sunset.slice(0, sunset.lastIndexOf(":"));
+        sunrise = sunrise.slice(0, sunrise.lastIndexOf(":"));
+        sunset = sunset.slice(0, sunset.lastIndexOf(":"));
 
         await data.msg.channel.send(new MessageEmbed()
             .setTitle("Weather forecast: " + result.name)
             .addFields(
                 {
                     name: "stats",
-                    value: result.weather[0].main + "\n" + "temperature: " + Math.floor(result.main.temp).toFixed(0) + " °C"+ "\n" +
+                    value: result.weather[0].main + "\n" + "temperature: " + Math.floor(result.main.temp).toFixed(0) + " °C" + "\n" +
                         "Sunrise: " + sunrise + " am" + "\n" +
                         "Sunset: " + sunset + " pm"
                 }
