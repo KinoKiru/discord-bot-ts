@@ -23,15 +23,22 @@
   "author": "kino",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^15.12.4",
+    "@types/node": "^15.12.5",
     "@types/node-fetch": "^2.5.10",
     "typescript": "^4.3.4"
   },
   "dependencies": {
+    "@discordjs/opus": "^0.5.3",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
+    "ffmpeg-static": "^4.4.0",
     "nhentai.js-api": "^2.1.7",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "simple-spotify": "^1.0.3",
+    "ytdl": "^1.4.1",
+    "ytdl-core": "^4.8.3",
+    "ytpl": "^2.2.1",
+    "ytsr": "^3.5.0"
   },
   "repository": {
     "type": "git",

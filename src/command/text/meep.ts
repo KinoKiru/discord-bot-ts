@@ -13,34 +13,35 @@ class meep extends Command {
         const api = new NHentai();
         const hentai = await api.random(false);
         await data.msg.channel.send(new MessageEmbed()
-            .setTitle(hentai.title)
+            .setTitle(hentai.cleanTitle)
             .setThumbnail(hentai.cover)
             .setURL(hentai.url)
-            .addField("tags", this.hentaiOntleed(hentai.tags), true)
+            .addField("tags", this.tagParse(hentai.tags, "tag"), true)
             .addFields(
-                {name: "author", value: "" + this.validator(hentai.artists), inline: false},
-                {name: "characters", value: "" + this.validator(hentai.characters), inline: false},
-                {name: "genre", value: "" + this.validator(hentai.categories), inline: false},
-                {name: "language", value: "" + this.validator(hentai.languages), inline: false},
-                {name: "parodies", value: "" + this.validator(hentai.parodies), inline: false},
+                {name: "author", value: "" + this.validator(hentai.artists, "artist"), inline: false},
+                {name: "characters", value: "" + this.validator(hentai.characters, "character"), inline: false},
+                {name: "genre", value: "" + this.validator(hentai.categories, "category"), inline: false},
+                {name: "language", value: "" + this.validator(hentai.languages, "language"), inline: false},
+                {name: "parodies", value: "" + this.validator(hentai.parodies, "parody"), inline: false},
             )
             .setColor("#cd52f2")
         )
     }
 
-    hentaiOntleed(hentaiTags: string[]) {
-        let tags: string = ""
+    tagParse(hentaiTags: string[], types: string) {
+        let tags: string = "";
         for (const hentaitag of hentaiTags) {
-            tags += `[\`${hentaitag}\`](https://nhentai.net/${hentaitag.replace(/ /g,"-")}) `;
+            tags += `[\`${hentaitag}\`](https://nhentai.net/${types}/${hentaitag.replace(/ /g,"-")}) `;
         }
         return tags
     }
 
-    validator(hentai: string[]) {
+
+    validator(hentai: string[], type: string) {
         if (hentai == null || "" || undefined || hentai.length <= 0) {
             return "`" + "none" + "`";
         } else if (Array.isArray(hentai)) {
-            return this.hentaiOntleed(hentai);
+            return this.tagParse(hentai, type);
         }
     }
 

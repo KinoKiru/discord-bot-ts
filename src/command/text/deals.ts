@@ -2,6 +2,7 @@ import Command, {CommandData} from "../../model/command";
 import {EmbedField, MessageEmbed, MessageReaction} from "discord.js";
 import fetch, {RequestInit} from 'node-fetch'
 import Group from "../../model/group";
+import AppendError from "../../util/appendError";
 
 interface Deal {
     "internalName": string,
@@ -75,6 +76,7 @@ class Deals extends Command {
                 await sendMessage.react('▶️');
             }
         } catch (error) {
+            AppendError.onError(error + " " + "deals.ts")
         }
     }
 

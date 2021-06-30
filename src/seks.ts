@@ -36,7 +36,6 @@ class Seks extends Client {
             }
             group.push(command)
         })
-        console.log(this.groups);
     }
 
     async onMessage(msg: Message) {
@@ -77,6 +76,10 @@ class Seks extends Client {
         });
     }
 }
+
+const queue = new Map();
+export {queue};
+
 
 config()
 const seks = new Seks(process.env.token!, process.env.prefix!);
