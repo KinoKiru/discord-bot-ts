@@ -1,4 +1,4 @@
-import {Client, Collection, Message} from 'discord.js';
+import {Client, Collection, Message, VoiceState} from 'discord.js';
 import {config} from 'dotenv';
 import Command from "./model/command";
 import CommandLoader from "./util/command_loader";
@@ -26,6 +26,7 @@ class Seks extends Client {
         //als er een message binnen komt dan roept hij onMessage aan
         this.on("message", this.onMessage);
         this.on("ready", this.onReady);
+        this.on("voiceStateUpdate", this.onVoiceStateUpdate);
         CommandLoader.load(__dirname + "/command", this.commands);
 
         this.commands.forEach(command => {
@@ -74,6 +75,22 @@ class Seks extends Client {
         this.user!.setActivity("use ^help", {
             type: "PLAYING"
         });
+    }
+
+    onVoiceStateUpdate(oldMember : VoiceState, newMember: VoiceState){
+        if (oldMember.channel && !newMember.channel) {
+            queue.delete(oldMember.guild.id);
+            console.log('old: leaved');
+        } else if (newMember.channel && !oldMember.channel) {
+            console.log('new: joined');
+        } else if (!oldMember.channel && !newMember.channel) {
+            console.log('nothing');
+        } else if (oldMember.channel === newMember.channel) {
+            console.log('same');
+        } else {
+            console.log('old', oldMember.channel);
+            console.log('new', newMember.channel);
+        }
     }
 }
 
