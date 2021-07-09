@@ -67,14 +67,14 @@ class play extends Command {
                     return;
                 }
                 //hier maak ik een object genaamd songs en daar geef ik een title,url,duration,tumbnail uit songInfo
-                const songs : Song = {
+                const songs: Song = {
                     title: songInfo.videoDetails.title,
                     url: songInfo.videoDetails.video_url,
                     durationSeconds: play.timeToSeconds(songInfo.videoDetails.lengthSeconds),
                     thumbnail: songInfo.videoDetails.thumbnails[0].url,
-                    isLive : songInfo.videoDetails.isLiveContent,
-                    type : SongType.YOUTUBE,
-                    duration : songInfo.videoDetails.lengthSeconds
+                    isLive: songInfo.videoDetails.isLiveContent,
+                    type: SongType.YOUTUBE,
+                    duration: songInfo.videoDetails.lengthSeconds
                 }
                 //hier push ik songs naar de songs array van serverQueue, dus als serverQueue.songs leeg is speelt hij deze als eerste af
                 serverQueue.songs.push(songs);
@@ -89,15 +89,15 @@ class play extends Command {
 
                 //hier gooi ik in songs de songInfo.items(aka de songs).map en dan wil ik alleen de:
                 //Title, url, duration, en de thumbnail
-                const songs = songInfo.items.map(({title, url, duration, bestThumbnail, isLive}) : Song => {
+                const songs = songInfo.items.map(({title, url, duration, bestThumbnail, isLive}): Song => {
                     return {
                         title,
                         url,
                         durationSeconds: play.timeToSeconds(duration),
                         thumbnail: bestThumbnail.url || "",
-                        isLive : isLive,
-                        duration : duration || "0",
-                        type : SongType.YOUTUBE
+                        isLive: isLive,
+                        duration: duration || "0",
+                        type: SongType.YOUTUBE
                     };
                 });
                 //hier push ik naar serverQueue.songs alles in songs
@@ -118,15 +118,30 @@ class play extends Command {
                         //hier push ik alle songs van de playlist naar de serverQueue
                         serverQueue.songs.push(...songs);
                         //hij gaat pas verder als ik de message heb gestuurd
-                        if (songs.length > 1) {
+                        if (songs.length < 1) {
+
                         } else {
                             await data.msg.channel.send(`Added '${songs.length}' song to the queue!`);
-                            return;
+
                         }
                     }
                 } catch (error) {
                     AppendError.onError(error + " on line: 151, in file: play.js");
                 }
+            } else if (data.args[0].endsWith(".mp3") || data.args[0].endsWith(".mov") || data.args[0].endsWith(".mp4")) {
+
+                let url = data.args[0];
+                let song : Song = {
+                    title: url.slice(0, url.lastIndexOf("/")),
+                    url: data.args[0],
+                    durationSeconds: 0,
+                    thumbnail:  "",
+                    type: SongType.MP3,
+                    isLive: false,
+                    duration: "00:00"
+                }
+                serverQueue.songs.push(song);
+
             } else {
                 //hier pak ik de argumenten en plaats ik die bij elkaar en gooi ik er een spatie tussen
                 const words = data.args.join(' ');
@@ -140,7 +155,7 @@ class play extends Command {
                 //en hier gooi ik de url erin met de optie dat het er maar 1 mag zijn
                 const searchResults: { items: Video[] } = await ytsr(filter1!.url!, options) as any;
                 //hier gooi ik de info in de delen
-                const songs : Song = {
+                const songs: Song = {
                     title: searchResults.items[0].title,
                     url: searchResults.items[0].url,
                     durationSeconds: play.timeToSeconds(searchResults.items[0].duration),
@@ -163,7 +178,7 @@ class play extends Command {
     }
 
 
-     async play(serverQueue: any, queue: any, start = false, data: CommandData) {
+    async play(serverQueue: any, queue: any, start = false, data: CommandData) {
 
         const song = serverQueue.songs[0] as Song;
 
@@ -179,19 +194,24 @@ class play extends Command {
         }
 
         if (serverQueue.songs.length <= 1 || start) {
-            if (song.type === SongType.SPOTIFY){
-                console.log(song)
+            let stream ;
+            if (song.type === SongType.SPOTIFY) {
                 let track = await sfdl.searchYT(song.title + ' ' + song.artist);
-                if(track){
+                if (track) {
                     song.url = track.url;
-                }else{
+                    stream =  ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
+                } else {
                     await data.msg.channel.send(song.title + " isn't found");
                     return;
                 }
+            }else if (song.type === SongType.MP3){
+                stream =  song.url;
+            }else if (song.type === SongType.YOUTUBE){
+                stream =  ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
             }
             //als de server.songs.length <= 1 dan speelt hij het liedje af ipv de plaatsen in de queue
             const dispatcher = serverQueue.connection
-                .play(ytdl(song.url, {filter: "audioonly", quality: "highestaudio"}))
+                .play(stream)
                 .on('finish', () => {
                     serverQueue.songs.shift();
                     this.play(serverQueue, queue, true, data);

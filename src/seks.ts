@@ -77,7 +77,8 @@ class Seks extends Client {
         });
     }
 
-    onVoiceStateUpdate(oldMember : VoiceState, newMember: VoiceState){
+   onVoiceStateUpdate(oldMember : VoiceState, newMember: VoiceState){
+        if(oldMember.id === this.user?.id)
         if (oldMember.channel && !newMember.channel) {
             queue.delete(oldMember.guild.id);
             console.log('old: leaved');

@@ -6,7 +6,8 @@ import play from "../command/music/play";
 
 export enum SongType {
     YOUTUBE,
-    SPOTIFY
+    SPOTIFY,
+    MP3
 }
 
 export interface Song {
