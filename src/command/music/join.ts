@@ -5,7 +5,7 @@ import AppendError from "../../util/appendError";
 
 class join extends Command{
     constructor() {
-        super("join", ["j"], "Joins your current voice channel", Group.music, "!(join/j)");
+        super("join", ["j"], "Joins your current voice channel", Group.music, "^(join/j)");
     }
     async execute(data: CommandData){
         try{

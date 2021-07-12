@@ -10,7 +10,7 @@ import skip from "./skip";
 
 class play extends Command {
     constructor() {
-        super("play", ["p"], "plays your stupid song", Group.music, "!(p/play)<string>youtube/spotify url");
+        super("play", ["p"], "plays your stupid song", Group.music, "^(p/play)<string>youtube/spotify url/.file");
     }
 
     async execute(data: CommandData) {

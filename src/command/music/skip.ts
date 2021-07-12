@@ -8,7 +8,7 @@ import play from "./play";
 class skip extends Command{
 
     constructor() {
-        super("skip", ["s"], "Skipt je stomme liedje", Group.music, "!(s/skip)");
+        super("skip", ["s"], "Skipt je stomme liedje", Group.music, "^(s/skip)");
     }
 
 

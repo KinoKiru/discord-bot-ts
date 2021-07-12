@@ -85,7 +85,7 @@ class news extends Command {
         let newsResponse = await fetch(`https://newsapi.org/v2/everything?q=keyword&apiKey=${process.env.News}&language=${lang}`);
         let newsReply = await newsResponse.json();
         let article = newsReply.articles[this.randomizer(newsReply.articles.length)];
-        console.log(article);
+
         await data.msg.channel.send(new MessageEmbed()
             .setTitle(this.decodeEntities(article.title.replace(/\[|]|】|"|\*/g, '')))
             .setURL(article.url)
@@ -109,6 +109,10 @@ class news extends Command {
 
 
         //translator
+        if (lang == "jp"){
+            lang = "ja";
+        }
+
         let response = await fetch(`https://translated-mymemory---translation-memory.p.rapidapi.com/api/get?q=${encodeURIComponent(article.description + " 1252562363 " + article.title)}&langpair=${lang}%7Cen&de=a%40b.c&onlyprivate=0&mt=1`, {
             "method": "GET",
             "headers": {
@@ -119,11 +123,11 @@ class news extends Command {
         let reply = await response.json();
 
         let title = reply.responseData.translatedText.split("1252562363");
-        let desc = title[0]
+        let desc = title[0];
 
 
         await data.msg.channel.send(new MessageEmbed()
-            .setTitle(this.decodeEntities(title[1].replace(/\[|]|】|"|\*/g, '')))
+            .setTitle(this.decodeEntities(title[0].replace(/\[|]|】|"|\*/g, '')))
             .setURL(article.url)
             .setThumbnail(article.urlToImage)
             .addFields(

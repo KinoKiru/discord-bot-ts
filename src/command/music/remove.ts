@@ -7,7 +7,7 @@ import AppendError from "../../util/appendError";
 
 class Remove extends Command{
     constructor() {
-        super("remove", ["r"], "removes a song at a givin place", Group.music, "!(remove/r)");
+        super("remove", ["r"], "removes a song at a givin place", Group.music, "^(remove/r)");
     }
     async execute(data: CommandData){
         try {

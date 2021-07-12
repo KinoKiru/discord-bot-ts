@@ -5,7 +5,7 @@ import {queue} from "../../seks";
 
 class Leave extends Command {
     constructor() {
-        super("leave", [], "Leaves the current channel its in", Group.music, "!leave");
+        super("leave", [], "Leaves the current channel its in", Group.music, "^leave");
     }
 
     async execute(data: CommandData) {

@@ -6,7 +6,7 @@ import Group from "../../model/group";
 class meep extends Command {
 
     constructor() {
-        super("meep", ["hentai"], "shows hanime", Group.nsfw, "!(meep/hentai)");
+        super("meep", ["hentai"], "shows hanime", Group.nsfw, "^(meep/hentai)");
     }
 
     async execute(data: CommandData) {

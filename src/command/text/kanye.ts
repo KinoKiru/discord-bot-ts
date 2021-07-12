@@ -4,7 +4,7 @@ import Group from "../../model/group";
 
 class kanye extends Command{
     constructor() {
-        super("kanye", [], "Kanyes wisdom he shares with you!", Group.misc, "!kanye");
+        super("kanye", [], "Kanyes wisdom he shares with you!", Group.misc, "^kanye");
     }
     async execute(data:CommandData){
         fetch("https://api.kanye.rest/")

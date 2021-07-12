@@ -4,7 +4,7 @@ import AppendError from "../../util/appendError";
 
 class Shutdown extends Command{
     constructor() {
-        super("shutdown", ["exit"], "Stops the bot", Group.owner, "!(shutdown/exit)");
+        super("shutdown", ["exit"], "Stops the bot", Group.owner, "^(shutdown/exit)");
     }
     async execute(data: CommandData){
         try {

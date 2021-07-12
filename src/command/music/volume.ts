@@ -6,7 +6,7 @@ import {queue} from "../../seks";
 
 class Volume extends Command{
 constructor() {
-    super("volume", ["v"], "changes the volume of the song", Group.music, "!(v/volume)<integer> 1-500");
+    super("volume", ["v"], "changes the volume of the song", Group.music, "^(v/volume)<integer> 1-500");
 }
 async execute(data: CommandData){
     try {

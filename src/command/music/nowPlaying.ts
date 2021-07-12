@@ -6,7 +6,7 @@ import AppendError from "../../util/appendError";
 
 class np extends Command {
     constructor() {
-        super("np", [], "show the current song", Group.music, "!np");
+        super("np", [], "show the current song", Group.music, "^np");
     }
 
     async execute(data: CommandData) {

@@ -3,7 +3,7 @@ import Group from "../../model/group";
 
 class OwO extends Command{
     constructor() {
-        super("owo", ["OwO"], "uwu owo", Group.misc, "!(owo/OwO)");
+        super("owo", ["OwO"], "uwu owo", Group.misc, "^(owo/OwO)");
     }
     async execute(data: CommandData){
         try {

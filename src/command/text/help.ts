@@ -4,7 +4,7 @@ import {EmbedField, MessageEmbed} from "discord.js";
 
 class help extends Command {
     constructor() {
-        super("help", [], "helpu", Group.misc,"!help",);
+        super("help", [], "gives a list with commands or the use case", Group.misc,"^help",);
     }
 
     async execute(data: CommandData) {

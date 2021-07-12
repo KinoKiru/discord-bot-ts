@@ -33,7 +33,7 @@ class Deals extends Command {
 
     constructor() {
         //roept een nieuw command aan
-        super("deals", ["d", "games"], "Ik wil huilen", Group.misc, "!(deals/d/games)");
+        super("deals", ["d", "games"], "Gives good deals on gamesS", Group.misc, "^(deals/d/games)");
     }
 
     async startDeals(data: CommandData) {

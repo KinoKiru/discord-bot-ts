@@ -3,7 +3,7 @@ import Group from "../../model/group";
 
 class ping extends Command{
     constructor() {
-        super("ping", [], "shows the delay", Group.misc, "!ping");
+        super("ping", [], "shows the delay", Group.misc, "^ping");
     }
     async execute(data:CommandData){
         const before : number = Date.now();
