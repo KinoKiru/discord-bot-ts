@@ -31,7 +31,7 @@ class  Shuffle extends Command{
               songs[rand2] = tmp;
           }
           //en hier voeg ik nummer 1 weer toe op plaats 1
-          serverQueue.songs.unshift(first);
+          serverQueue.songs.unshift(first!);
 
           await data.msg.channel.send("Queue shuffeld!");
       }catch (error){

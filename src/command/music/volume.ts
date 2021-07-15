@@ -21,7 +21,7 @@ async execute(data: CommandData){
             //als de volume tussen de 0 en 500 dab
             serverQueue.volume = (+data.args[0] / 100);
             //hier set hij de volume van de dispatcher
-            serverQueue.connection.dispatcher.setVolume(+data.args[0] / 100);
+            serverQueue.connection!.dispatcher.setVolume(+data.args[0] / 100);
             await data.msg.channel.send("changed volume to " + (data.args[0]) + "%");
             //hier overschijf ik de serverQueue zoadat de dispatcher set volumme mee gaat
             queue.set(data.msg.guild!.id, serverQueue);

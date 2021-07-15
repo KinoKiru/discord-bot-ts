@@ -7,6 +7,16 @@ import ytpl from "ytpl";
 import AppendError from "../../util/appendError";
 import ytsr, {Video} from "ytsr";
 import skip from "./skip";
+import {TextChannel, VoiceConnection} from "discord.js";
+
+
+export interface ServerQueue {
+    textChannel: TextChannel,
+    connection: null | VoiceConnection,
+    songs: Song[],
+    volume: number,
+    playing: boolean
+}
 
 class play extends Command {
     constructor() {
@@ -19,7 +29,7 @@ class play extends Command {
         //als er nog geen serverQueue bestaat dan maak ik er een en set ik die in de queue map
         if (!serverQueue) {
             serverQueue = {
-                textChannel: data.msg.channel,
+                textChannel: data.msg.channel as TextChannel,
                 connection: null,
                 songs: [] as Song[],
                 volume: 1,
@@ -116,7 +126,7 @@ class play extends Command {
                         //hier stel ik start weer in op false
                         start = serverQueue.songs.length === 0;
                         //hier push ik alle songs van de playlist naar de serverQueue
-                        serverQueue.songs.push(...songs);
+                        serverQueue.songs.push(...songs as any[]);
                         //hij gaat pas verder als ik de message heb gestuurd
                         if (songs.length < 1) {
 

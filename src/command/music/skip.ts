@@ -15,7 +15,7 @@ class skip extends Command{
     async execute(data: CommandData) {
         try {
 
-            let serverQueue = queue.get(data.msg.guild?.id);
+            let serverQueue = queue.get(data.msg.guild!.id);
             //hij kijkt of je wel in de voice channel zit zo nee dan wordt dat vermeld
             if (!data.msg.member?.voice.channel){
                 await data.msg.channel.send(

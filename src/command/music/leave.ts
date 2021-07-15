@@ -19,7 +19,7 @@ class Leave extends Command {
             } else {
                 //als er wel liedjes zijn dan clear ik alle liedjes en dan eindig ik de afspeler en leaved de bot
                 serverQueue.songs = [];
-                serverQueue.connection.dispatcher.end();
+                serverQueue.connection!.dispatcher.end();
             }
         } catch (e) {
              AppendError.onError(e + " in leave on line 22");

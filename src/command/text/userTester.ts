@@ -2,7 +2,6 @@ import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
 import fetch from "node-fetch";
 import {MessageEmbed} from "discord.js";
-import Volume from "../music/volume";
 
 const genders = require("../../util/gender");
 

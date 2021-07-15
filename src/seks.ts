@@ -3,6 +3,8 @@ import {config} from 'dotenv';
 import Command from "./model/command";
 import CommandLoader from "./util/command_loader";
 import Group from "./model/group";
+import {Song} from "./util/sfdl";
+import {ServerQueue} from "./command/music/play";
 
 class Seks extends Client {
 
@@ -95,7 +97,7 @@ class Seks extends Client {
     }
 }
 
-const queue = new Map();
+const queue = new Map<string, ServerQueue>();
 export {queue};
 
 

@@ -25,7 +25,13 @@ class np extends Command {
                 return;
             }
             //speelt er nu wel een liedje? dan maak ik een embed die de song title en de foto meegeeft
-            await data.msg.channel.send(new MessageEmbed().setTitle(serverQueue.songs[0].title).setThumbnail(serverQueue.songs[0].thumbnail).setURL(serverQueue.songs[0].url));
+            await data.msg.channel.send(new MessageEmbed()
+                .setTitle(serverQueue.songs[0].title)
+                .setThumbnail(serverQueue.songs[0].thumbnail)
+                .setURL(serverQueue.songs[0].url)
+                .setAuthor(`Requested by: ${data.msg.guild?.member(data.msg.author.id)?.displayName}`, data.msg.author.avatarURL()!)
+                .setColor("#42523a")
+            );
         } catch (e) {
             AppendError.onError(e + " in np on line 28");
         }

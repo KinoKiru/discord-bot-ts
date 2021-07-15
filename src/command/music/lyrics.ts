@@ -1,45 +1,26 @@
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
+import LyricScraper from "../../util/lyricScraper";
 import {queue} from "../../seks";
-import {SongType} from "../../util/sfdl";
-import fetch from "node-fetch";
 import {MessageEmbed} from "discord.js";
 
-
-class Lyrics extends Command {
+class Lyrics extends Command{
     constructor() {
-        super("lyrics", ["l"], "Gives the lyrics of the currrent song", Group.music, "^(lyrics/l)");
+        super("lyrics", ["l"], "Gives you the lyrics of a song", Group.music, "^(lyrics/l)");
     }
-
     async execute(data: CommandData) {
-        let serverQueue = queue.get(data.msg.guild?.id);
+        let serverQueue = queue.get(data.msg.guild!.id)!;
+        let title = serverQueue.songs[0].title.replace(/\*|"|:|music|video|official|vevo|hq|]|feat|full album|featuring|\.|\(|\)|\[|{|}|「|」|-/gi, ' ');
+        let artist = serverQueue.songs[0].artist?.replace(/\*|"|:|-/g, '')||"";
 
-
-        if (!data.msg.member?.voice.channel) {
-            await data.msg.channel.send(
-                "You have to be in a voice channel to display lyrics!"
-            );
-            return;
-        }
-
-        //als er nog geen serverqueue bestaat of dat er geen liedjes zijn dan leaved ie en geeft hij een message aan de user
-        if (!serverQueue || serverQueue.songs.length === 0) {
-            data.msg.member.voice.channel.leave();
-            await data.msg.channel.send("There is no lyrics i can display");
-            return;
-        }
-        console.log(serverQueue.songs[0]);
-        if (serverQueue.songs[0].type === SongType.SPOTIFY) {
-
-            let response = await fetch(`https://api.lyrics.ovh/v1/${encodeURIComponent(serverQueue.songs[0].artist)}/${encodeURIComponent(serverQueue.songs[0].title)}`);
-            let result = await response.json();
-
+            let instance = new LyricScraper();
+            let response = await instance.Scaper(artist+" "+title);
             await data.msg.channel.send(new MessageEmbed()
-                .setTitle(`Lyrics of:  ${serverQueue.songs[0].title}`)
-                .addField("lyrics", result.lyrics)
+                .setDescription(response)
+                .setTitle(title.replace(/ +/g," "))
+                .setAuthor(artist)
+                .setColor("#800869")
             )
-        }
-
     }
 }
 

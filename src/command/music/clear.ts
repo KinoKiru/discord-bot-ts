@@ -22,7 +22,7 @@ class clear extends Command{
            //dan clear ik de queue (aka de songs)
            serverQueue.songs = []
            //dan gooi ik weer het eerste nummer erin en dan geef ik een message
-           serverQueue.songs.unshift(first);
+           serverQueue.songs.unshift(first!);
            await data.msg.channel.send("Cleared queue");
        }catch (e) {
            AppendError.onError(e +" in clear on line 25");

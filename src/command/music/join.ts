@@ -2,6 +2,7 @@ import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
 import {queue} from "../../seks";
 import AppendError from "../../util/appendError";
+import {TextChannel} from "discord.js";
 
 class join extends Command{
     constructor() {
@@ -15,7 +16,7 @@ class join extends Command{
             //asl er nog geen serverqueue bestaat dan maak ik er een aan
             if (!serverQueue) {
                 serverQueue = {
-                    textChannel: data.msg.channel,
+                    textChannel: data.msg.channel as TextChannel,
                     connection: null,
                     songs: [],
                     volume: 1,
@@ -30,7 +31,7 @@ class join extends Command{
                await data.msg.channel.send("You need to be in a voice channel to play music!");
 
             //als je in een call zit dan joined de bot
-            serverQueue.connection = voiceChannel!.join()
+            serverQueue.connection = await voiceChannel!.join()
         } catch (e) {
           AppendError.onError(e + " in join on line 37");
         }
