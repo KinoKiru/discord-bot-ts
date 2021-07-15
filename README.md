@@ -1,6 +1,5 @@
-# I like them cummies 
+# Dev bot Typescript 
+- - Multipurpose discord bot made in typescript
 - - -
-hihi
-- - -
-cum
+Has lots of commands and use cases 
 - - - 
