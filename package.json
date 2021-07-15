@@ -1,6 +1,6 @@
 {
   "name": "dev-bot-ts",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "Multy purpose discord bot",
   "main": "lib/seks.js",
   "types": "lib/seks.d.ts",
