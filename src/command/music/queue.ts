@@ -1,6 +1,6 @@
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
-import {queue} from "../../seks";
+import {queue} from "../../bot";
 import {Song} from "../../util/sfdl";
 import AppendError from "../../util/appendError";
 

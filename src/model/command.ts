@@ -1,12 +1,12 @@
 import {Message} from "discord.js";
 import Group from "./group";
-import Seks from "../seks";
+import Bot from "../bot";
 
 export interface CommandData {
     commandName : string
     args : string[]
     msg : Message
-    bot : Seks
+    bot : Bot
 }
 
 abstract class Command {

@@ -2,7 +2,7 @@ import ytdl from 'ytdl-core'
 import AppendError from "../../util/appendError";
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
-import {queue} from "../../seks";
+import {queue} from "../../bot";
 import play from "./play";
 
 class skip extends Command{

@@ -1,7 +1,7 @@
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
 import sfdl, {Song, SongType} from "../../util/sfdl";
-import {queue} from "../../seks";
+import {queue} from "../../bot";
 import ytdl from "ytdl-core";
 import ytpl from "ytpl";
 import AppendError from "../../util/appendError";

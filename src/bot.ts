@@ -3,28 +3,46 @@ import {config} from 'dotenv';
 import Command from "./model/command";
 import CommandLoader from "./util/command_loader";
 import Group from "./model/group";
-import {Song} from "./util/sfdl";
+import Database from "better-sqlite3";
+import {createServer} from "http";
+import {Server, Socket} from "socket.io";
 import {ServerQueue} from "./command/music/play";
+import path from "path";
+import DatabaseHandeler from "./util/databaseHandeler";
 
-class Seks extends Client {
+const db = new Database(path.resolve('./src/database', 'database.sqlite'), {});
+DatabaseHandeler.createTables(db);
+
+const httpServer = createServer();
+const io = new Server(httpServer, {
+    cors: {
+        //to github
+        origin: "http://localhost:63342",
+        methods: ["GET", "POST"]
+    }
+});
+
+io.on("connection", (socket: Socket) => {
+    let init = DatabaseHandeler.getStartData(db);
+    socket.emit("initStartup", init);
+});
+httpServer.listen(3000);
+
+
+class Bot extends Client {
 
     public readonly prefix: string;
     public readonly commands: Collection<string, Command>;
     public readonly groups: Collection<Group, Command[]>
 
-    /**
-     *
-     * @param token
-     * @param prefix
-     */
     constructor(token: string, prefix: string) {
-
         //dit roept de constructor van de client aan
         super();
         this.login(token);
         this.prefix = prefix;
         this.commands = new Collection<string, Command>();
-        this.groups = new Collection<Group, Command[]>()
+        this.groups = new Collection<Group, Command[]>();
+
         //als er een message binnen komt dan roept hij onMessage aan
         this.on("message", this.onMessage);
         this.on("ready", this.onReady);
@@ -38,11 +56,21 @@ class Seks extends Client {
                 this.groups.set(command.group, group)
             }
             group.push(command)
+            if (!DatabaseHandeler.getUses(db, command)) {
+                DatabaseHandeler.insertData(db, command);
+            }
         })
+
+        let arr =  DatabaseHandeler.getStartData(db);
+
+        for (const row of arr) {
+            if(!this.commands.has(row.command)){
+              DatabaseHandeler.delete(db, row.command);
+            }
+        }
     }
 
     async onMessage(msg: Message) {
-
         //als het bericht niet begint met de prefix of een andere bot voert de command uit doet de bot niks
         if (!msg.content.startsWith(this.prefix) || msg.author.bot) return;
 
@@ -64,6 +92,17 @@ class Seks extends Client {
                 return msg.author.send("This command can only be used in a server");
             } else {
                 await command.execute({commandName, msg, args, bot: this});
+
+                //als je een variable wilt gebruiken moet je een vraagteken gebruiken
+                //database handeling en versturen van server naar client
+                let uses = DatabaseHandeler.getUses(db, command);
+                if (uses) {
+                    DatabaseHandeler.upDate(db, command, uses.use);
+                    let updateAll = DatabaseHandeler.getStartData(db);
+                    io.emit("update", updateAll);
+                } else {
+                    DatabaseHandeler.insertData(db, command);
+                }
             }
         } catch (e) {
             console.log(e);
@@ -79,28 +118,28 @@ class Seks extends Client {
         });
     }
 
-   onVoiceStateUpdate(oldMember : VoiceState, newMember: VoiceState){
-        if(oldMember.id === this.user?.id)
-        if (oldMember.channel && !newMember.channel) {
-            queue.delete(oldMember.guild.id);
-            console.log('old: leaved');
-        } else if (newMember.channel && !oldMember.channel) {
-            console.log('new: joined');
-        } else if (!oldMember.channel && !newMember.channel) {
-            console.log('nothing');
-        } else if (oldMember.channel === newMember.channel) {
-            console.log('same');
-        } else {
-            console.log('old', oldMember.channel);
-            console.log('new', newMember.channel);
-        }
+    onVoiceStateUpdate(oldMember: VoiceState, newMember: VoiceState) {
+        if (oldMember.id === this.user?.id)
+            if (oldMember.channel && !newMember.channel) {
+                queue.delete(oldMember.guild.id);
+                console.log('old: leaved');
+            } else if (newMember.channel && !oldMember.channel) {
+                console.log('new: joined');
+            } else if (!oldMember.channel && !newMember.channel) {
+                console.log('nothing');
+            } else if (oldMember.channel === newMember.channel) {
+                console.log('same');
+            } else {
+                console.log('old', oldMember.channel);
+                console.log('new', newMember.channel);
+            }
     }
 }
+
 
 const queue = new Map<string, ServerQueue>();
 export {queue};
 
-
 config()
-const seks = new Seks(process.env.token!, process.env.prefix!);
-export default Seks;
+const seks = new Bot(process.env.token!, process.env.prefix!);
+export default Bot;

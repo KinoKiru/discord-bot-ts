@@ -1,7 +1,7 @@
 import Command, {CommandData} from "../../model/command";
 import Group from "../../model/group";
 import AppendError from "../../util/appendError";
-import {queue} from "../../seks";
+import {queue} from "../../bot";
 
 
 class Volume extends Command{
