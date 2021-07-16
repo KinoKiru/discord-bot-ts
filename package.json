@@ -1,6 +1,6 @@
 {
   "name": "dev-bot-ts",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "description": "Multy purpose discord bot",
   "main": "lib/bot.js",
   "types": "lib/bot.d.ts",
