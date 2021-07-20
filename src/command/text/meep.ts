@@ -28,10 +28,10 @@ class meep extends Command {
         )
     }
 
-    tagParse(hentaiTags: Tag[] , types: string) {
+    tagParse(hentaiTags: Tag[], types: string) {
         let tags: string = "";
         for (const hentaitag of hentaiTags) {
-            tags += `[\`${hentaitag.name}\`](https://nhentai.net/${types}/${hentaitag.name.replace(/ /g,"-")}) `;
+            tags += `[\`${hentaitag.name}\`](https://nhentai.net/${types}/${hentaitag.name.replace(/ /g, "-")}) `;
         }
         return tags
     }

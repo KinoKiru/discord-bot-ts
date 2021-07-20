@@ -4,7 +4,7 @@ import {EmbedField, MessageEmbed} from "discord.js";
 
 class help extends Command {
     constructor() {
-        super("help", [], "gives a list with commands or the use case", Group.misc,"^help",);
+        super("help", [], "gives a list with commands or the use case", Group.misc, "^help",);
     }
 
     async execute(data: CommandData) {
@@ -40,7 +40,7 @@ class help extends Command {
                     console.error(`Could not send help DM to ${data.msg.author.tag}.\n`, error);
                     data.msg.reply('it seems like I can\'t DM you! Do you have DMs disabled?');
                 });
-            return ;
+            return;
         }
 
         //hier stuur ik de Help naar je DM's en dan geef ik je een input terug
@@ -52,8 +52,8 @@ class help extends Command {
 
         //als de command niet bestaat met die naam, dan reply ik
         if (!command) {
-           await data.msg.reply('that\'s not a valid command!');
-           return;
+            await data.msg.reply('that\'s not a valid command!');
+            return;
         }
 
         //hier push ik de naam van de command naar de data array
@@ -63,10 +63,10 @@ class help extends Command {
         //als ik een description heb dan push ik die naar de array
         if (command.description) dataArr.push(`**Description:** ${command.description}`);
         //als ik een usage heb meegegeven dan push ik die naar de array
-       if (command.usage) dataArr.push(`**Usage:** ${command.usage}`);
+        if (command.usage) dataArr.push(`**Usage:** ${command.usage}`);
 
         //hier send ik de aparte !help Command
-       await data.msg.channel.send(dataArr, {split: true});
+        await data.msg.channel.send(dataArr, {split: true});
 
     } //execute
 

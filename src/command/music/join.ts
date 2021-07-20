@@ -4,12 +4,13 @@ import {queue} from "../../bot";
 import AppendError from "../../util/appendError";
 import {TextChannel} from "discord.js";
 
-class join extends Command{
+class join extends Command {
     constructor() {
         super("join", ["j"], "Joins your current voice channel", Group.music, "^(join/j)");
     }
-    async execute(data: CommandData){
-        try{
+
+    async execute(data: CommandData) {
+        try {
             const voiceChannel = data.msg.member!.voice.channel;
             let serverQueue = queue.get(data.msg.guild!.id);
 
@@ -28,12 +29,12 @@ class join extends Command{
             }
             //als de author van het bericht niet in een call zit dan geeft hij deze message
             if (!voiceChannel)
-               await data.msg.channel.send("You need to be in a voice channel to play music!");
+                await data.msg.channel.send("You need to be in a voice channel to play music!");
 
             //als je in een call zit dan joined de bot
             serverQueue.connection = await voiceChannel!.join()
         } catch (e) {
-          AppendError.onError(e + " in join on line 37");
+            AppendError.onError(e + " in join on line 37");
         }
     }
 }

@@ -27,13 +27,13 @@ interface Deal {
 }
 
 class Deals extends Command {
-    async execute(data: CommandData) {
-        await this.startDeals(data);
-    }
-
     constructor() {
         //roept een nieuw command aan
         super("deals", ["d", "games"], "Gives good deals on gamesS", Group.misc, "^(deals/d/games)");
+    }
+
+    async execute(data: CommandData) {
+        await this.startDeals(data);
     }
 
     async startDeals(data: CommandData) {

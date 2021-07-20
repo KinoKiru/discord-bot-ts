@@ -5,7 +5,6 @@ import cheerio from 'cheerio';
 class LyricScraper {
 
     async Scaper(songName: string) {
-        console.log(songName);
         const url = `https://www.musixmatch.com/search/${encodeURIComponent(songName)}`;
         const AxiosInstance = axios.create(); // Create a new Axios Instance
 
@@ -16,14 +15,13 @@ class LyricScraper {
         const resultAnchor: cheerio.Cheerio = $('h2.media-card-title > a');
         if (resultAnchor["0" as any]) {
             // @ts-ignore
-            return await this.lyrics(resultAnchor["0" as any].attribs.href);
+            return await this.translatedLyrics(resultAnchor["0" as any].attribs.href);
         } else {
-            return "Couldn't find lyrics";
+            return "Couldn't find song";
         }
     }
 
-    async lyrics(Result: string) {
-
+    async translatedLyrics(Result: string) {
 
         const url = `https://www.musixmatch.com${Result}/translation/english`; // URL we're scraping
         const AxiosInstance = axios.create(); // Create a new Axios Instance
@@ -36,7 +34,7 @@ class LyricScraper {
         let lyricsDivs: cheerio.Cheerio = $('div.col-xs-6.col-sm-6.col-md-6.col-ml-6.col-lg-6 > div > div'); // Parse the HTML and extract just whatever code contains .statsTableContainer and has tr inside
 
         if (lyricsDivs[0] == undefined) {
-            return "lyrics not found";
+            return "lyrics couldn't be found";
         }
 
         let lyrics = "";
@@ -47,7 +45,6 @@ class LyricScraper {
                 // @ts-ignore
                 lyrics += lyricsDiv.children[0].data + "\n";
             } else {
-                console.log(lyricsDiv);
             }
 
         }

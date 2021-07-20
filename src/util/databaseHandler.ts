@@ -1,34 +1,40 @@
-import {Database} from "better-sqlite3";
 import Command from "../model/command";
+import path from "path";
+import Database from "better-sqlite3";
 
 
-class DatabaseHandeler {
+const db = new Database(path.resolve('./src/database', 'database.sqlite'), {});
+
+
+class DatabaseHandler {
     constructor() {
     }
 
-    static getStartData(db: Database) {
+    static getStartData() {
         return db.prepare("SELECT * FROM commands ORDER BY command").all();
     }
 
-    static getUses(db: Database, command: Command) {
+    static getUses(command: Command) {
         return db.prepare("SELECT use FROM commands WHERE command IS ?").get(command.name);
     }
 
-    static createTables(db: Database) {
+    static createTables() {
         db.prepare('CREATE TABLE IF NOT EXISTS \'commands\' (command TEXT,description TEXT, use INTEGER)').run();
     }
 
-    static insertData(db: Database, command: Command) {
+    static insertData(command: Command) {
         db.prepare("INSERT INTO commands VALUES (?,?,?)").run(command.name, command.description, 0);
     }
 
-    static upDate(db: Database, command: Command, uses: number) {
+    static upDate(command: Command, uses: number) {
         db.prepare("UPDATE commands SET use = ? WHERE command IS ?").run(uses + 1, command.name);
     }
 
-    static delete(db: Database, commandName: string){
+    static delete(commandName: string) {
         db.prepare("DELETE FROM commands WHERE command IS ?").run(commandName);
     }
 }
 
-export default DatabaseHandeler
+DatabaseHandler.createTables();
+
+export default DatabaseHandler

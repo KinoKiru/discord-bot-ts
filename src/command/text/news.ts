@@ -49,8 +49,8 @@ class news extends Command {
             case "germany":
             case "deutschland":
             case "🇩🇪":
-              await this.LanguageTranslate(data, "de");
-              break;
+                await this.LanguageTranslate(data, "de");
+                break;
             default :
                 await this.Language(data, "en");
                 break;
@@ -109,7 +109,7 @@ class news extends Command {
 
 
         //translator
-        if (lang == "jp"){
+        if (lang == "jp") {
             lang = "ja";
         }
 

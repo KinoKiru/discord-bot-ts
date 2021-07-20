@@ -1,6 +1,5 @@
-
-enum Group{
-    misc= "Misc",
+enum Group {
+    misc = "Misc",
     music = "Music Commands",
     owner = "Owner Commands",
     nsfw = "NSFW"

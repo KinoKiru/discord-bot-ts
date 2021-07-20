@@ -1,14 +1,14 @@
 {
   "name": "dev-bot-ts",
   "version": "3.0.0",
-  "description": "Multy purpose discord bot",
-  "main": "lib/bot.js",
-  "types": "lib/bot.d.ts",
+  "description": "Multipurpose discord bot",
+  "main": "lib/server.js",
+  "types": "lib/server.d.ts",
   "files": [
     "lib/**/*"
   ],
   "scripts": {
-    "start": "tsc && node lib/bot.js",
+    "start": "tsc && node lib/server.js",
     "test": "echo \"Error: no test specified\""
   },
   "keywords": [

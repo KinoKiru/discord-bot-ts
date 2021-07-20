@@ -58,6 +58,8 @@ class sfdl {
 
             const info = await spotify.track(data.args[0]);
 
+            console.log(info);
+
             try {
                 return [await this.searchYT(info.name + ' ' + info.artists[0].name)];
             } catch (e) {

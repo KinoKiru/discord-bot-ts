@@ -22,7 +22,7 @@ class Leave extends Command {
                 serverQueue.connection!.dispatcher.end();
             }
         } catch (e) {
-             AppendError.onError(e + " in leave on line 22");
+            AppendError.onError(e + " in leave on line 22");
         }
     }
 }

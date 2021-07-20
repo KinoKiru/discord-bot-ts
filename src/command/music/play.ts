@@ -23,6 +23,25 @@ class play extends Command {
         super("play", ["p"], "plays your stupid song", Group.music, "^(p/play)<string>youtube/spotify url/.file");
     }
 
+    static timeToSeconds(time: string | null) {
+        if (!time || time === '') return 0;
+        const split = time.split(':');
+        let hours = 0;
+        let minutes: number;
+        let seconds: number;
+        if (split.length === 3) {
+            const [h, m, s] = split;
+            hours = +h;
+            minutes = +m;
+            seconds = +s;
+        } else {
+            const [m, s] = split;
+            minutes = +m;
+            seconds = +s;
+        }
+        return (hours * 3600) + (minutes * 60) + seconds;
+    }
+
     async execute(data: CommandData) {
         let serverQueue = queue.get(data.msg.guild!.id);
 
@@ -141,11 +160,11 @@ class play extends Command {
             } else if (data.args[0].endsWith(".mp3") || data.args[0].endsWith(".mov") || data.args[0].endsWith(".mp4")) {
 
                 let url = data.args[0];
-                let song : Song = {
+                let song: Song = {
                     title: url.slice(0, url.lastIndexOf("/")),
                     url: data.args[0],
                     durationSeconds: 0,
-                    thumbnail:  "",
+                    thumbnail: "",
                     type: SongType.MP3,
                     isLive: false,
                     duration: "00:00"
@@ -187,7 +206,6 @@ class play extends Command {
         return;
     }
 
-
     async play(serverQueue: any, queue: any, start = false, data: CommandData) {
 
         const song = serverQueue.songs[0] as Song;
@@ -204,20 +222,20 @@ class play extends Command {
         }
 
         if (serverQueue.songs.length <= 1 || start) {
-            let stream ;
+            let stream;
             if (song.type === SongType.SPOTIFY) {
                 let track = await sfdl.searchYT(song.title + ' ' + song.artist);
                 if (track) {
                     song.url = track.url;
-                    stream =  ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
+                    stream = ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
                 } else {
                     await data.msg.channel.send(song.title + " isn't found");
                     return;
                 }
-            }else if (song.type === SongType.MP3){
-                stream =  song.url;
-            }else if (song.type === SongType.YOUTUBE){
-                stream =  ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
+            } else if (song.type === SongType.MP3) {
+                stream = song.url;
+            } else if (song.type === SongType.YOUTUBE) {
+                stream = ytdl(song.url, {filter: "audioonly", quality: "highestaudio"});
             }
             //als de server.songs.length <= 1 dan speelt hij het liedje af ipv de plaatsen in de queue
             const dispatcher = serverQueue.connection
@@ -240,25 +258,6 @@ class play extends Command {
             await data.msg.channel.send("Added song to queue");
             return;
         }
-    }
-
-    static timeToSeconds(time: string | null) {
-        if (!time || time === '') return 0;
-        const split = time.split(':');
-        let hours = 0;
-        let minutes: number;
-        let seconds: number;
-        if (split.length === 3) {
-            const [h, m, s] = split;
-            hours = +h;
-            minutes = +m;
-            seconds = +s;
-        } else {
-            const [m, s] = split;
-            minutes = +m;
-            seconds = +s;
-        }
-        return (hours * 3600) + (minutes * 60) + seconds;
     }
 }
 

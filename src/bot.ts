@@ -3,46 +3,25 @@ import {config} from 'dotenv';
 import Command from "./model/command";
 import CommandLoader from "./util/command_loader";
 import Group from "./model/group";
-import Database from "better-sqlite3";
-import {createServer} from "http";
-import {Server, Socket} from "socket.io";
 import {ServerQueue} from "./command/music/play";
-import path from "path";
-import DatabaseHandeler from "./util/databaseHandeler";
-
-const db = new Database(path.resolve('./src/database', 'database.sqlite'), {});
-DatabaseHandeler.createTables(db);
-
-const httpServer = createServer();
-const io = new Server(httpServer, {
-    cors: {
-        //to github
-        origin: "http://localhost:63342",
-        methods: ["GET", "POST"]
-    }
-});
-
-io.on("connection", (socket: Socket) => {
-    let init = DatabaseHandeler.getStartData(db);
-    socket.emit("initStartup", init);
-});
-httpServer.listen(3000);
-
+import DatabaseHandler from "./util/databaseHandler";
+import {Server} from "socket.io";
 
 class Bot extends Client {
 
     public readonly prefix: string;
     public readonly commands: Collection<string, Command>;
-    public readonly groups: Collection<Group, Command[]>
+    public readonly groups: Collection<Group, Command[]>;
+    public readonly io: Server;
 
-    constructor(token: string, prefix: string) {
+    constructor(token: string, prefix: string, io: Server) {
         //dit roept de constructor van de client aan
         super();
         this.login(token);
         this.prefix = prefix;
         this.commands = new Collection<string, Command>();
         this.groups = new Collection<Group, Command[]>();
-
+        this.io = io;
         //als er een message binnen komt dan roept hij onMessage aan
         this.on("message", this.onMessage);
         this.on("ready", this.onReady);
@@ -56,16 +35,16 @@ class Bot extends Client {
                 this.groups.set(command.group, group)
             }
             group.push(command)
-            if (!DatabaseHandeler.getUses(db, command)) {
-                DatabaseHandeler.insertData(db, command);
+            if (!DatabaseHandler.getUses(command)) {
+                DatabaseHandler.insertData(command);
             }
         })
 
-        let arr =  DatabaseHandeler.getStartData(db);
+        let arr = DatabaseHandler.getStartData();
 
         for (const row of arr) {
-            if(!this.commands.has(row.command)){
-              DatabaseHandeler.delete(db, row.command);
+            if (!this.commands.has(row.command)) {
+                DatabaseHandler.delete(row.command);
             }
         }
     }
@@ -95,13 +74,13 @@ class Bot extends Client {
 
                 //als je een variable wilt gebruiken moet je een vraagteken gebruiken
                 //database handeling en versturen van server naar client
-                let uses = DatabaseHandeler.getUses(db, command);
+                let uses = DatabaseHandler.getUses(command);
                 if (uses) {
-                    DatabaseHandeler.upDate(db, command, uses.use);
-                    let updateAll = DatabaseHandeler.getStartData(db);
-                    io.emit("update", updateAll);
+                    DatabaseHandler.upDate(command, uses.use);
+                    let updateAll = DatabaseHandler.getStartData();
+                    this.io.emit("update", updateAll);
                 } else {
-                    DatabaseHandeler.insertData(db, command);
+                    DatabaseHandler.insertData(command);
                 }
             }
         } catch (e) {
@@ -141,5 +120,4 @@ const queue = new Map<string, ServerQueue>();
 export {queue};
 
 config()
-const seks = new Bot(process.env.token!, process.env.prefix!);
 export default Bot;

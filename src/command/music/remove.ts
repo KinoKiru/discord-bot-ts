@@ -5,11 +5,12 @@ import skip from "./skip";
 import AppendError from "../../util/appendError";
 
 
-class Remove extends Command{
+class Remove extends Command {
     constructor() {
         super("remove", ["r"], "removes a song at a givin place", Group.music, "^(remove/r)");
     }
-    async execute(data: CommandData){
+
+    async execute(data: CommandData) {
         try {
             let serverQueue = queue.get(data.msg.guild!.id);
             const voiceChannel = data.msg.member!.voice.channel;
@@ -35,7 +36,7 @@ class Remove extends Command{
             }
 
             if (+data.args[0] === 1) {
-               await data.bot.commands.get("skip")!.execute(data);
+                await data.bot.commands.get("skip")!.execute(data);
                 return;
             }
 
@@ -43,11 +44,11 @@ class Remove extends Command{
                 const song = serverQueue.songs.splice(+data.args[0] - 1, 1)
                 await data.msg.channel.send(`Removed song: ${song[0].title}`);
             } else {
-               await data.msg.channel.send("Please give an amount!")
+                await data.msg.channel.send("Please give an amount!")
             }
 
         } catch (error) {
-             AppendError.onError(error + " in remove on line 43");
+            AppendError.onError(error + " in remove on line 43");
         }
     }
 }

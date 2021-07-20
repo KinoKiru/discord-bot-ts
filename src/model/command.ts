@@ -3,10 +3,10 @@ import Group from "./group";
 import Bot from "../bot";
 
 export interface CommandData {
-    commandName : string
-    args : string[]
-    msg : Message
-    bot : Bot
+    commandName: string
+    args: string[]
+    msg: Message
+    bot: Bot
 }
 
 abstract class Command {
@@ -27,6 +27,7 @@ abstract class Command {
 
     //promise krijg je terug van een async functie
     //void zegt wat ie terug kijgt van die async functie
-    public abstract execute(data : CommandData) : Promise<void> ;
+    public abstract execute(data: CommandData): Promise<void> ;
 }
+
 export default Command
