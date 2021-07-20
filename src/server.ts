@@ -24,9 +24,9 @@ httpServer.listen(3000);
 //https server
 try {
     // Certificates ToDo change the files to the correct pems
-    const privateKey = fs.readFileSync(path.resolve(process.cwd(), "pkey.txt")).toString("utf-8");
-    const certificate = fs.readFileSync(path.resolve(process.cwd(), "csr.txt")).toString("utf-8");
-    const ca = fs.readFileSync(path.resolve(process.cwd(), "ca.txt")).toString("utf-8");
+    const privateKey = fs.readFileSync(path.resolve(process.cwd(), "certificates/pkey.txt")).toString("utf-8");
+    const certificate = fs.readFileSync(path.resolve(process.cwd(), "certificates/csr.txt")).toString("utf-8");
+    const ca = fs.readFileSync(path.resolve(process.cwd(), "certificates/ca.txt")).toString("utf-8");
 
     const credentials = {
         key: privateKey,
