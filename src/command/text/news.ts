@@ -6,7 +6,7 @@ import {MessageEmbed} from "discord.js";
 
 class news extends Command {
     constructor() {
-        super("news", ["n"], "gives a new news article", Group.misc, "^(n, news)");
+        super("news", ["n"], "gives a new news article", Group.misc, "^<n/news language>");
     }
 
     async execute(data: CommandData) {

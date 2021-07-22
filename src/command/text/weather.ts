@@ -6,7 +6,7 @@ import {MessageEmbed} from "discord.js";
 
 class Weather extends Command {
     constructor() {
-        super("weather", ["w"], "Sends you the weather forecast", Group.misc, "^(w, weather)");
+        super("weather", ["w"], "Sends you the weather forecast", Group.misc, "^<w/weather>");
     }
 
     async execute(data: CommandData) {

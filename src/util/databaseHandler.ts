@@ -19,11 +19,11 @@ class DatabaseHandler {
     }
 
     static createTables() {
-        db.prepare('CREATE TABLE IF NOT EXISTS \'commands\' (command TEXT,description TEXT, use INTEGER)').run();
+        db.prepare('CREATE TABLE IF NOT EXISTS \'commands\' (command TEXT,description TEXT,usage TEXT ,use INTEGER)').run();
     }
 
     static insertData(command: Command) {
-        db.prepare("INSERT INTO commands VALUES (?,?,?)").run(command.name, command.description, 0);
+        db.prepare("INSERT INTO commands VALUES (?,?,?,?)").run(command.name, command.description, command.usage, 0);
     }
 
     static upDate(command: Command, uses: number) {

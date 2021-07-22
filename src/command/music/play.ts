@@ -20,7 +20,7 @@ export interface ServerQueue {
 
 class play extends Command {
     constructor() {
-        super("play", ["p"], "plays your stupid song", Group.music, "^(p/play)<string>youtube/spotify url/.file");
+        super("play", ["p"], "plays your stupid song", Group.music, "^<p/play youtube,spotify url,file>");
     }
 
     static timeToSeconds(time: string | null) {

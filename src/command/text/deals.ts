@@ -29,7 +29,7 @@ interface Deal {
 class Deals extends Command {
     constructor() {
         //roept een nieuw command aan
-        super("deals", ["d", "games"], "Gives good deals on gamesS", Group.misc, "^(deals/d/games)");
+        super("deals", ["d", "games"], "Gives good deals on gamesS", Group.misc, "^<d/deals/games>");
     }
 
     async execute(data: CommandData) {

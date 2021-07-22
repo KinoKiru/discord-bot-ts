@@ -4,7 +4,7 @@ import Group from "../../model/group";
 
 class userInfo extends Command {
     constructor() {
-        super("userinfo", ["ui"], "Gives you user data", Group.misc, "!(ui/userinfo)")
+        super("userinfo", ["ui"], "Gives you user data", Group.misc, "^<ui/userinfo>")
     }
 
     async execute(data: CommandData) {

@@ -26,6 +26,7 @@
     "@types/axios": "^0.14.0",
     "@types/better-sqlite3": "^5.4.3",
     "@types/cheerio": "^0.22.30",
+    "@types/jsdom": "^16.2.13",
     "@types/node": "^15.12.5",
     "@types/node-fetch": "^2.5.10",
     "typescript": "^4.3.4"
@@ -37,6 +38,7 @@
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.0",
+    "jsdom": "^16.6.0",
     "nhentai.js-api": "^2.2.2",
     "node-fetch": "^2.6.1",
     "simple-spotify": "^1.0.4",

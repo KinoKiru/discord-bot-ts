@@ -6,7 +6,7 @@ import {TextChannel} from "discord.js";
 
 class join extends Command {
     constructor() {
-        super("join", ["j"], "Joins your current voice channel", Group.music, "^(join/j)");
+        super("join", ["j"], "Joins your current voice channel", Group.music, "^<j/join>");
     }
 
     async execute(data: CommandData) {

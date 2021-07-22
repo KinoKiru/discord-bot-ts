@@ -6,7 +6,7 @@ import AppendError from "../../util/appendError";
 
 class Queue extends Command {
     constructor() {
-        super("queue", ["q"], "Shows the song queue", Group.music, "^(q/queue)");
+        super("queue", ["q"], "Shows the song queue", Group.music, "^<q/queue>");
     }
 
     async execute(data: CommandData) {

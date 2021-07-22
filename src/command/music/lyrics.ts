@@ -6,7 +6,7 @@ import {MessageEmbed} from "discord.js";
 
 class Lyrics extends Command {
     constructor() {
-        super("lyrics", ["l"], "Gives you the lyrics of a song", Group.music, "^(lyrics/l)");
+        super("lyrics", ["l"], "Gives you the lyrics of a song", Group.music, "^<l/lyrics>");
     }
 
     async execute(data: CommandData) {

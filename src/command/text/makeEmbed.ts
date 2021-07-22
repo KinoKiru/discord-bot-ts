@@ -4,7 +4,7 @@ import Group from "../../model/group";
 
 class makeEmbed extends Command {
     constructor() {
-        super("makeembed", ["me", "make"], "Maakt een embed die gebruikt kan worden", Group.misc, "^(me/make/makeembed)");
+        super("makeembed", ["me", "make"], "Maakt een embed die gebruikt kan worden", Group.misc, "^<me/make/makeembed>");
     }
 
     async execute(data: CommandData) {

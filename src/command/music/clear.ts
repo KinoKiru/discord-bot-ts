@@ -5,7 +5,7 @@ import AppendError from "../../util/appendError";
 
 class clear extends Command {
     constructor() {
-        super("clear", ["c"], "clears the queue", Group.music, "!(c/clear)");
+        super("clear", ["c"], "clears the queue", Group.music, "^<c/clear>");
     }
 
     async execute(data: CommandData) {

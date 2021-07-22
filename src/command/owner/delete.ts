@@ -5,7 +5,7 @@ import AppendError from "../../util/appendError";
 
 class Delete extends Command {
     constructor() {
-        super("delete", ["dx"], "Delete messages", Group.owner, "^(d/delete)<Integer>1 - 100");
+        super("delete", ["dx"], "Delete messages", Group.owner, "^<d/delete 1 - 100>");
     }
 
     async execute(data: CommandData) {

@@ -6,7 +6,7 @@ import AppendError from "../../util/appendError";
 
 class Shuffle extends Command {
     constructor() {
-        super("shuffle", ["sh"], "Shuffles the queue", Group.music, "^(sh/shuffle)");
+        super("shuffle", ["sh"], "Shuffles the queue", Group.music, "^<sh/shuffle>");
     }
 
     async execute(data: CommandData) {

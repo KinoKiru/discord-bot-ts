@@ -8,7 +8,7 @@ const genders = require("../../util/gender");
 
 class UserTester extends Command {
     constructor() {
-        super("identity", ["id"], "shows your true gender and age", Group.misc, "^(id, identity)");
+        super("identity", ["id"], "shows your true gender and age", Group.misc, "^<id/identity>");
     }
 
     async execute(data: CommandData) {
