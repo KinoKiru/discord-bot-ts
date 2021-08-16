@@ -26,8 +26,8 @@ class DatabaseHandler {
         db.prepare("INSERT INTO commands VALUES (?,?,?,?)").run(command.name, command.description, command.usage, 0);
     }
 
-    static upDate(command: Command, uses: number) {
-        db.prepare("UPDATE commands SET use = ? WHERE command IS ?").run(uses + 1, command.name);
+    static upDate(command: Command) {
+        db.prepare("UPDATE commands SET use = use + 1 WHERE command IS ?").run(command.name);
     }
 
     static delete(commandName: string) {

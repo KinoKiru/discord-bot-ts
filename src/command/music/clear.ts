@@ -17,7 +17,6 @@ class clear extends Command {
                 await data.msg.channel.send("There is no queue");
                 return;
             }
-
             //hier pak ik het eerste liedje die haal ik tijdelijk weg
             const first = serverQueue.songs.shift();
             //dan clear ik de queue (aka de songs)

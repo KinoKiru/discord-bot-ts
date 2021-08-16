@@ -26,6 +26,7 @@ class UserTester extends Command {
                 .addFields(
                     {name: "Information", value: "Gender: " + result.gender + "\n Age: " + ageResult.age}
                 ).setColor("#fc6203")
+                .setAuthor(data.msg.guild?.member(data.msg.author.id)?.displayName, data.msg.author.avatarURL()!)
             )
         } else {
 
@@ -42,6 +43,7 @@ class UserTester extends Command {
                 .addFields(
                     {name: "Gender", value: "Gender: " + result.gender + "\n Age: " + ageResult.age}
                 ).setColor("#fc6203")
+                .setAuthor(data.msg.guild?.member(data.msg.author.id)?.displayName, data.msg.author.avatarURL()!)
             )
         }
     }

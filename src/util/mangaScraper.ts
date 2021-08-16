@@ -13,10 +13,12 @@ class mangaScraper {
         if (!number) {
             number = "1";
         }
+
         let response = await JSDOM.fromURL(`https://manganato.com/search/story/${data.args.join("_")}`);
         let document = response.window.document;
         //link is a variable which holds the link to the chapters
         let link = document.querySelector("div.item-right>h3>a.a-h.text-nowrap.item-title")!.getAttribute("href");
+
 
         let chapterSelect = await JSDOM.fromURL(link!);
         let chapterSelectDocument = chapterSelect.window.document;
@@ -60,7 +62,7 @@ class mangaScraper {
 
         while (true) {
             const collected = await sendMessage.awaitReactions(filter, {max: 1, time: 50000, errors: ['time']})
-            const reaction = collected.first()!
+            const reaction = collected.first()!;
 
             if (reaction.emoji.name === '▶️') {
                 index++;
@@ -73,9 +75,8 @@ class mangaScraper {
                 .setImage(`attachment://${index}.png`)
                 .attachFiles(Images[index])
 
-           let edit = await sendMessage.edit(other);
-
-            await sendMessage.reactions.removeAll();
+            await sendMessage.delete();
+            sendMessage = await data.msg.channel.send(other);
             await sendMessage.react('◀️');
             await sendMessage.react('▶️');
 

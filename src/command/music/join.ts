@@ -14,7 +14,7 @@ class join extends Command {
             const voiceChannel = data.msg.member!.voice.channel;
             let serverQueue = queue.get(data.msg.guild!.id);
 
-            //asl er nog geen serverqueue bestaat dan maak ik er een aan
+            //asl er nog geen serverqueue bestaat dan maak ik er een aan, die bestaat uit een connectie een array aan liedjes, volume en playing
             if (!serverQueue) {
                 serverQueue = {
                     textChannel: data.msg.channel as TextChannel,

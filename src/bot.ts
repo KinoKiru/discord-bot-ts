@@ -70,18 +70,18 @@ class Bot extends Client {
             if (msg.channel.type === "dm" && command.name !== "help" && command.name !== "shutdown") {
                 return msg.author.send("This command can only be used in a server");
             } else {
-                await command.execute({commandName, msg, args, bot: this});
 
                 //als je een variable wilt gebruiken moet je een vraagteken gebruiken
                 //database handeling en versturen van server naar client
                 let uses = DatabaseHandler.getUses(command);
                 if (uses) {
-                    DatabaseHandler.upDate(command, uses.use);
+                    DatabaseHandler.upDate(command);
                     let updateAll = DatabaseHandler.getStartData();
                     this.io.emit("update", updateAll);
                 } else {
                     DatabaseHandler.insertData(command);
                 }
+                await command.execute({commandName, msg, args, bot: this});
             }
         } catch (e) {
             console.log(e);
